@@ -1,6 +1,27 @@
 .NokiaTijolao {
-  text-align: center;
+    border:3px solid black;
+    width:80%;
+    margin:auto;
+    text-align: center;   
 }
 
+.container {
+    margin:auto;
+    text-align:center;
+}
 
+button {
+    width:15%;
+    margin-bottom: 1%;
+    border-radius:10px;
+}
 
+.send {
+    margin: 1%;
+    width:20%;
+}
+
+.clear {
+    margin: 1%;
+    width:20%;
+}

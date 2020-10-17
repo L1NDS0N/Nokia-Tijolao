@@ -1,6 +1,13 @@
 const express = require('express');
-
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.use(express.json());
 
@@ -35,18 +42,19 @@ letra.set("9999", "z");
 var palavraSeparada = "";
 var palavraRetorno = "";
 
-function converte(pa){
-    palavraSeparada2 = pa.split(" ");
-    console.log(palavraSeparada2)
-  palavraRetorno = "";
-    for ( var i = 0; i < palavraSeparada2.length; i++ ){
-        if(letra.has(palavraSeparada2[i])){
-      palavraRetorno += letra.get(palavraSeparada2[i])
-    } else{
-            
+function converte(pa) {
+    palavraSeparada = pa.split(" ");
+    console.log("Inserido: ", palavraSeparada)
+    palavraRetorno = "";
+    for (var i = 0; i < palavraSeparada.length; i++) {
+        if (letra.has(palavraSeparada[i])) {
+            palavraRetorno += letra.get(palavraSeparada[i])
+        } else {
+
             palavraRetorno += "?"
+        }
     }
-}
+    console.log("Gerado: ", palavraRetorno)
     return palavraRetorno;
 }
 
@@ -54,15 +62,18 @@ app.post('/app/:char', (req, res) => {
     const telNumber = req.params.char;
     const telPalavra = converte(telNumber);
 
-    if (telPalavra === "undefined") {
-        return res.status(404).json({ "Erro": "Erro na conversão do número inserido", telPalavra }).send();
+    if (telPalavra.includes("?")) {
+        return res.status(404).json({ "Erro": "Um dos caracteres inseridos é inválido", telNumber, telPalavra }).send();
     }
+
+    if (telPalavra === "?") {
+        return res.status(404).json({ "Erro": "Erro na conversão do número inserido", telNumber, telPalavra }).send();
+    }
+
     return res.json({
-        "numeroDigitado": telNumber,
+        "numeroInserido": telNumber,
         "palavraGerada": telPalavra
     })
-
-
 })
 
 app.listen(3333);
